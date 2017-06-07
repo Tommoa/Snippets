@@ -4,5 +4,7 @@ A collection of other random things that I made
 Proving Jonathan Blow wrong about C++ ([[https://www.youtube.com/watch?v=Mo6_tJFeNMM][Demo: Quick Lambdas, Looping Polymorph Solver]]).
 
 About 28 min in, Jonathan Blow talks about passing templated functions as function pointers and claims that its impossible with C++. I counter with this.
-Yes, its far more ugly, and yes, I shouldn't have to do it that way, but still, it works.
+I prefer the way he does it in Jai, but still, it can be done, and its not too ugly.
 Also, I should be able to get the size of the array using sizeof().
+
+Tested with clang++ v4.0.0 and g++ v7.1.1 on Arch Linux
