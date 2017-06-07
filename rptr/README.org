@@ -19,6 +19,17 @@ How the memory is addressed (for x64 its unsigned long).
  3. ~rptr(T* to, void* base)~ - Makes a pointer to object ~to~ relative to base pointer ~base~
  4. ~rptr(T* to, A base)~ - Makes a pointer to object ~to~ relative to base address ~base~
 
+*** Operators
+ 1. ~operator=(rptr other)~ - Makes ~this~ rptr point to the same object as ~other~
+ 2. ~operator=(T* other)~ - Makes ~this~ rptr point to ~other~
+ 3. ~operator*()~ - Dereferences ~this~
+ 4. ~operator*(void* base)~ - Dereferences ~this~ relative to base pointer ~base~
+ 5. ~operator*(A base)~ - Dereferences ~this~ relative to base address ~base~
+
 *** Methods
- 1. ~BEGIN_SRC void change(T* to)~ - Changes the rptr to refer to object ~to~
- 2. 
+ 1. ~void change(T* to)~ - Changes the rptr to refer to object ~to~
+ 2. ~void change(T* to, void* base)~ - Changes the rptr to refer to object ~to~ relative to base pointer ~base~
+ 3. ~void change(T* to, A base)~ - Changes the rptr to refer to object ~to~ relative to base address ~base~
+ 4. ~void assign(T what)~ - Assigns the value ~what~ to the object the rptr is pointing to
+ 5. ~void assign(T what, void* base)~ - Assigns the value ~what~ to the object the rptr is pointing to relative to base pointer ~base~
+ 6. ~void assign(T what, A base)~ - Assigns the value ~what~ to the object the rptr is pointing to relative to base address ~base~

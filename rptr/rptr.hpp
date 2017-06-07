@@ -64,7 +64,7 @@ namespace Snippets {
             else
                 this->to = (S)(other.to + ((A)&other - (A)this));
         }
-        void operator=(T *other) {
+        void operator=(T* other) {
             this->to = (S)((A)other - (A)this);
         }
 
