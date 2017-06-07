@@ -3,7 +3,7 @@
 This project is intended to be a collection of random working things that I've made. Everything here has a its own source file, as well as test source code to show it working.
 Everything is tested on a x64 machine running Arch Linux (I'll probably eventually get around to doing other platforms as well).
 
-** rptr
+** [[rptr/README.org][rptr]]
 
 rptr is an implementation of a relative pointer using a template class.
 
@@ -11,7 +11,7 @@ The advantage of using rptr over a standard pointer is that the memory usage is 
 
 This is particularly helpful for data structures that contain a pointer to something else. A struct containing an int and a pointer is 16 bytes on x64 (4 bytes for the int, 8 for the pointer and 4 bytes of padding because of alignment), whereas a struct containing an int and a rptr<int> is only 8 bytes (4 bytes for the int, 4 bytes for the rptr<int>. rptr<short> or rptr<char> do not save any space because of alignment).
 
-** buffer
+** [[buffer/README.org][buffer]]
 
 buffer is an implementation of a byte array to store a set amount of memory and save on allocation time. It includes features to save and read the memory from a file (though it does this 1 to 1 at the moment, so a 2gb buffer will write a 2gb file).
 
