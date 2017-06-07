@@ -16,3 +16,6 @@ This is particularly helpful for data structures that contain a pointer to somet
 buffer is an implementation of a byte array to store a set amount of memory and save on allocation time. It includes features to save and read the memory from a file (though it does this 1 to 1 at the moment, so a 2gb buffer will write a 2gb file).
 
 I wrote this class to use in a future memory manager.
+
+** [[others/README.org][others]]
+A collection of other things that I made that don't really have a purpose.
