@@ -1,0 +1,8 @@
+* Others
+A collection of other random things that I made
+** [[template_poly.cpp][template_poly.cpp]]
+Proving Jonathan Blow wrong about C++ ([[https://www.youtube.com/watch?v=Mo6_tJFeNMM][Demo: Quick Lambdas, Looping Polymorph Solver]]).
+
+About 28 min in, Jonathan Blow talks about passing templated functions as function pointers and claims that its impossible with C++. I counter with this.
+Yes, its far more ugly, and yes, I shouldn't have to do it that way, but still, it works.
+Also, I should be able to get the size of the array using sizeof().
