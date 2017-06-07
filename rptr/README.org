@@ -1,0 +1,24 @@
+* rptr
+
+** Usage
+
+*** Templating
+#+BEGIN_SRC c++
+template <typename T, typename S = int, typename A = unsigned long>
+#+END_SRC
+ - T
+Refers to the type that the rptr will be pointing to.
+ - S
+The maximum distance of the rptr.
+ - A
+How the memory is addressed (for x64 its unsigned long).
+
+*** Constructors
+ 1. #+BEGIN_SRC rptr() #+END_SRC - Makes rptr refer to itself. Dereferencing a pointer called like this will throw an error.
+ 2. #+BEGIN_SRC rptr(T* to) #+END_SRC - Makes a pointer to object #+BEGIN_SRC to #+END_SRC
+ 3. #+BEGIN_SRC rptr(T* to, void* base) #+END_SRC - Makes a pointer to object #+BEGIN_SRC to #+END_SRC relative to base pointer #+BEGIN_SRC base #+END_SRC
+ 4. #+BEGIN_SRC rptr(T* to, A base) #+END_SRC - Makes a pointer to object #+BEGIN_SRC to #+END_SRC relative to base address #+BEGIN_SRC base #+END_SRC
+
+*** Methods
+ 1. #+BEGIN_SRC void change(T* to) #+END_SRC - Changes the rptr to refer to object #+BEGIN_SRC to #+END_SRC
+ 2. 

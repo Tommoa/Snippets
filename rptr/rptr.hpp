@@ -1,7 +1,5 @@
 #ifndef _SNIPPETS_RPTR_DEF_HPP
 #define _SNIPPETS_RPTR_DEF_HPP
-#include <string>
-#include <cstdlib>
 
 namespace Snippets {
 
@@ -9,10 +7,10 @@ namespace Snippets {
     *  rptr<T, S=int, A=long>
     *  A class that stores a pointer of as a signed number of type S to a type T. "A" refers to the size of datatype that can store all of the addresses in the machine.
     *
-    *  Abuses the fact that alignment is forced to multiples of 4 bytes by all modern systems.
+    *  Abuses alignment to set flags.
     *  Points to itself if it is null.
     **/
-    template <typename T, typename S = int, typename A = long> class rptr {
+    template <typename T, typename S = int, typename A = unsigned long> class rptr {
       private:
         S to;
       public:
@@ -39,25 +37,23 @@ namespace Snippets {
             this->to = (S)((A)to - base) + 1;
         }
 
-        std::string print() {
-            std::string ret = "Offset of ";
-            ret += std::to_string(to&1 ? to-1 : to);
-            ret += " relative to ";
-            ret += (to&1 ? "a base" : "self");
-            return ret;
-        }
-
         void assign(T what) {
+            if (!to)
+                throw;
             T* thing = (T*)((A)this + to);
             *thing = what;
         }
 
         void assign(T what, void* base) {
+            if (!to)
+                throw;
             T* thing = (T*)((A)base + to-1);
             *thing = what;
         }
 
         void assign(T what, A base) {
+            if (!to)
+                throw;
             T* thing = (T*)(base + to-1);
             *thing = what;
         }
@@ -73,17 +69,17 @@ namespace Snippets {
         }
 
         T operator*() {
-            if (to&1)
+            if (to&1 || !to)
                 throw;
             return *(T*)((A)this + to);
         }
         T operator*(void* base) {
-            if (!(to&1))
+            if (!(to&1)||!to)
                 throw;
             return *(T*)((A)base + to-1);
         }
         T operator*(A base) {
-            if (!(to&1))
+            if (!(to&1)||!to)
                 throw;
             return *(T*)((base + to)-1);
         }
