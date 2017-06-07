@@ -1,0 +1,14 @@
+* buffer
+Buffer is a class designed to hold a number of bytes and allow pointers to point to them, which saves some time due to less malloc.
+** Usage
+*** Constructors
+ 1. ~buffer()~ - Allocates an empty buffer. Any allocations to the buffer will throw
+ 2. ~buffer(size_t size)~ - Allocates a buffer of size ~size~
+ 3. ~buffer(char* filename)~ - Creates a buffer from a file ~filename~
+*** Methods
+ 1. ~void* alloc(size_t size)~ - Allocates ~size~ bytes on the buffer
+ 2. ~void* alloc<typename T>()~ = Allocates ~sizeof(T)~ bytes on the buffer
+ 3. ~void* offset(size_t offset)~ - Returns the address ~offset~ bytes into the buffer
+ 4. ~void clear()~ - Clear the buffer
+ 5. ~void save(char* filename)~ - Writes the buffer to a file ~filename~
+ 6. ~int load(char* filename, size_t offset = 0)~ - Reads data into the buffer from file ~filename~ at buffer offset ~offset~

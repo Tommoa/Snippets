@@ -34,7 +34,7 @@ namespace Snippets {
         void clear() ;
 
         void save(char* filename) ;
-        int load(char* filename, unsigned int offset = 0) ;
+        int load(char* filename, size_t offset = 0) ;
     };
 }
 #endif

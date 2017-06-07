@@ -7,7 +7,7 @@ Snippets::buffer::buffer() {
     maxsize = 0;
     current_size = 0;
 }
-Snippets::buffer::buffer(Snippets::size_t size) {
+Snippets::buffer::buffer(size_t size) {
     buf = (char*)malloc(size);
     maxsize = size;
     current_size = 0;
@@ -44,7 +44,7 @@ void Snippets::buffer::save(char* filename) {
     out.write(buf, maxsize);
     out.close();
 }
-int Snippets::buffer::load(char* filename, unsigned int offset) {
+int Snippets::buffer::load(char* filename, size_t offset) {
     std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
     unsigned long size = in.tellg();
     in.seekg(0, std::ifstream::beg);
