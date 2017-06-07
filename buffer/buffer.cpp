@@ -15,7 +15,7 @@ Snippets::buffer::buffer(Snippets::size_t size) {
 Snippets::buffer::buffer(char* filename) {
     std::ifstream in(filename,std::ifstream::ate | std::ifstream::binary);
     long size = in.tellg();
-    buf = (char*)alloc(size);
+    buf = (char*)malloc(size);
     in.seekg(0, std::ifstream::beg);
     in.read(buf,size);
 }

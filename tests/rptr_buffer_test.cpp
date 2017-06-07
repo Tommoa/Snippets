@@ -1,5 +1,5 @@
-#include "buffer.hpp"
-#include "rptr.hpp"
+#include "../buffer/buffer.hpp"
+#include "../rptr/rptr.hpp"
 
 #include <iostream>
 
