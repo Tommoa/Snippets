@@ -29,8 +29,8 @@ namespace Snippets {
         static malloc default_allocator;
         static recursive recursive_allocator;
         buffer(Allocator *allocator = &default_allocator, void* allocateObject = nullptr) ;
-        buffer(size_t size, Allocator *allocator = &default_allocator, void* allocateObject = nullptr) ;
-        buffer(char* filename, Allocator *allocator = &default_allocator, void* allocateObject = nullptr) ;
+        buffer(size_t size, Allocator *allocator = &default_allocator, void* allocateObject = nullptr);
+        buffer(char* filename, Allocator *allocator = &default_allocator, void* allocateObject = nullptr);
 
         void* alloc(size_t size) ;
         template<typename T> void* alloc() {

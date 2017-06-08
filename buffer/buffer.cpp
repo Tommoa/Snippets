@@ -1,5 +1,6 @@
 #include <fstream>
 #include <cstdlib>
+#include <iostream>
 
 #include "buffer.hpp"
 
@@ -80,7 +81,7 @@ void Snippets::buffer::malloc::free(void* current, void* worker) {
 void* Snippets::buffer::recursive::allocate(size_t size, void *worker) {
     if (worker == nullptr)
         throw;
-    ((Snippets::buffer*)worker)->alloc(size);
+    return ((Snippets::buffer*)worker)->alloc(size);
 }
 void* Snippets::buffer::recursive::reallocate(void *current, size_t size, void* worker) {
     throw; // No current way to do this
