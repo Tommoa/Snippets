@@ -32,7 +32,6 @@ namespace Snippets {
             this->to = (S)((A)to - (A)this);
         }
         void change(T* to, void* base) {
-            std::cout << (S)((A)to - (A)base) + 1 << " " << (A)this << " " << (*this).to << std::endl;
             (*this).to = (S)((A)to - (A)base) + 1; 
         }
         void change(T* to, A base) {

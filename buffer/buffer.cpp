@@ -1,24 +1,24 @@
 #include <fstream>
-#include <iostream>
+#include <cstdlib>
 
 #include "buffer.hpp"
 
-Snippets::buffer::buffer(Allocator allocator, void* allocateObject) {
-    this->allocator = &allocator;
+Snippets::buffer::buffer(Allocator *allocator, void* allocateObject) {
+    this->allocator = allocator;
     buf = (char*)this->allocator->allocate(0, allocateObject);
     current_size = 0;
     max_size = 0;
 }
-Snippets::buffer::buffer(size_t size, Allocator allocator, void* allocateObject) {
-    this->allocator = &allocator;
+Snippets::buffer::buffer(size_t size, Allocator *allocator, void* allocateObject) {
+    this->allocator = allocator;
     buf = (char*)((*(this->allocator)).allocate(size, allocateObject));
     current_size = 0;
     max_size = size;
 }
-Snippets::buffer::buffer(char* filename, Allocator allocator, void* allocateObject) {
+Snippets::buffer::buffer(char* filename, Allocator *allocator, void* allocateObject) {
     std::ifstream in(filename,std::ifstream::ate | std::ifstream::binary);
     long size = in.tellg();
-    this->allocator = &allocator;
+    this->allocator = allocator;
     buf = (char*)this->allocator->allocate(size, allocateObject);
     in.seekg(0, std::ifstream::beg);
     in.read(buf,size);

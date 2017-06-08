@@ -7,9 +7,12 @@ namespace Snippets {
     typedef unsigned long size_t;
 
     struct Allocator {
-        void* allocate(size_t, void* v = nullptr){}
-        void* reallocate(void*, size_t, void* v = nullptr){}
-        void free(void*, void* v = nullptr){}
+        virtual void* allocate(size_t, void* v = nullptr) = 0;
+        virtual void* reallocate(void*, size_t, void* v = nullptr) =0;
+        virtual void free(void*, void* v = nullptr) = 0;
+        ~Allocator() {
+            
+        }
     };
 
     class AllocationError : std::exception {};
@@ -36,9 +39,9 @@ namespace Snippets {
       public:
         static malloc default_allocator;
         static recursive recursive_allocator;
-        buffer(Allocator allocator = default_allocator, void* allocateObject = nullptr) ;
-        buffer(size_t size, Allocator allocator = default_allocator, void* allocateObject = nullptr) ;
-        buffer(char* filename, Allocator allocator = default_allocator, void* allocateObject = nullptr) ;
+        buffer(Allocator *allocator = &default_allocator, void* allocateObject = nullptr) ;
+        buffer(size_t size, Allocator *allocator = &default_allocator, void* allocateObject = nullptr) ;
+        buffer(char* filename, Allocator *allocator = &default_allocator, void* allocateObject = nullptr) ;
 
         void* alloc(size_t size) ;
         template<typename T> void* alloc() {

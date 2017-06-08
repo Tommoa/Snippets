@@ -26,8 +26,7 @@ int main() {
     rptr<long, int>* testrptr;
     for (int i = 0; i < 4; i++) {
         testrptr = (rptr<long, int>*)rptrbuffer.alloc<int>();
-        std::cout << (long) &testrptr << std::endl;
-        testrptr->change((long*)longbuffer.offset(sizeof(long)*i), longbuffer.offset(0)); 
+        testrptr->change((long*)longbuffer.offset(sizeof(long)*i), longbuffer.offset(0));
     }
 
     rptr<long, int>* looprptr;
