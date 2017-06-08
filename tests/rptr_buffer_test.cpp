@@ -20,13 +20,13 @@ int main() {
     for (int i = 1; i <= 4; i++) {
         t = (long*)longbuffer.alloc<long>();
         *t = rand();
-        std::cout << i << ": " << *t << std::endl;
     }
     std::cout << std::endl;
 
     rptr<long, int>* testrptr;
     for (int i = 0; i < 4; i++) {
         testrptr = (rptr<long, int>*)rptrbuffer.alloc<int>();
+        std::cout << (long) &testrptr << std::endl;
         testrptr->change((long*)longbuffer.offset(sizeof(long)*i), longbuffer.offset(0)); 
     }
 

@@ -6,23 +6,43 @@ namespace Snippets {
 
     typedef unsigned long size_t;
 
+    struct Allocator {
+        void* allocate(size_t, void* v = nullptr){}
+        void* reallocate(void*, size_t, void* v = nullptr){}
+        void free(void*, void* v = nullptr){}
+    };
+
     class AllocationError : std::exception {};
 
     class buffer {
         char* buf;
-
+        struct malloc : public Allocator {
+            void* allocate(size_t size, void* v = nullptr); 
+            void* reallocate(void* current, size_t size, void* v = nullptr); 
+            void free(void* current, void* v = nullptr); 
+        };
+        struct recursive : public Allocator {
+            void* allocate(size_t size, void* v);
+            void* reallocate(void* current, size_t size, void* v);
+            void free(void* current, void* v);
+          private:
+            void* worker;
+        };
       protected: 
-        size_t maxsize;
+        Allocator* allocator;
         size_t current_size;
+        size_t max_size;
 
       public:
-        buffer() ;
-        buffer(size_t size) ;
-        buffer(char* filename) ;
+        static malloc default_allocator;
+        static recursive recursive_allocator;
+        buffer(Allocator allocator = default_allocator, void* allocateObject = nullptr) ;
+        buffer(size_t size, Allocator allocator = default_allocator, void* allocateObject = nullptr) ;
+        buffer(char* filename, Allocator allocator = default_allocator, void* allocateObject = nullptr) ;
 
         void* alloc(size_t size) ;
         template<typename T> void* alloc() {
-            if (sizeof(T) + current_size > maxsize) {
+            if (sizeof(T) + current_size > max_size) {
                 throw AllocationError();
             }
             current_size += sizeof(T);

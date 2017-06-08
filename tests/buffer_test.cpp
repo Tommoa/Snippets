@@ -7,6 +7,9 @@ using namespace Snippets;
 int main() {
     std::cout << std::endl;
 
+    std::cout << "Size of buffer class: " << sizeof(buffer) << " bytes" << std::endl;
+    std::cout << std::endl;
+
     std::cout << "Allocating buffer of size 8 bytes (2 ints)" << std::endl;
     buffer buf(sizeof(int)*2);
     std::cout << "\tSuccess" << std::endl;

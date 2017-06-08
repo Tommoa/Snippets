@@ -1,5 +1,6 @@
 #ifndef _SNIPPETS_RPTR_DEF_HPP
 #define _SNIPPETS_RPTR_DEF_HPP
+#include <iostream>
 
 namespace Snippets {
 
@@ -10,7 +11,7 @@ namespace Snippets {
     *  Abuses alignment to set flags.
     *  Points to itself if it is null.
     **/
-    template <typename T, typename S = int, typename A = unsigned long> class rptr {
+    template <typename T, typename S = int, typename A = unsigned long> struct rptr {
       private:
         S to;
       public:
@@ -31,7 +32,8 @@ namespace Snippets {
             this->to = (S)((A)to - (A)this);
         }
         void change(T* to, void* base) {
-            this->to = (S)((A)to - (A)base) + 1;
+            std::cout << (S)((A)to - (A)base) + 1 << " " << (A)this << " " << (*this).to << std::endl;
+            (*this).to = (S)((A)to - (A)base) + 1; 
         }
         void change(T* to, A base) {
             this->to = (S)((A)to - base) + 1;
