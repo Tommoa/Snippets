@@ -1,22 +1,11 @@
 #ifndef __SNIPPETS_BUFFER_INC_HPP__
 #define __SNIPPETS_BUFFER_INC_HPP__
-#include <exception>
+
+#include "../abstractions/global.hpp"
+#include "../abstractions/allocators.hpp"
 
 namespace Snippets {
-
-    typedef unsigned long size_t;
-
-    struct Allocator {
-        virtual void* allocate(size_t, void* v = nullptr) = 0;
-        virtual void* reallocate(void*, size_t, void* v = nullptr) =0;
-        virtual void free(void*, void* v = nullptr) = 0;
-        ~Allocator() {
-            
-        }
-    };
-
-    class AllocationError : std::exception {};
-
+    
     class buffer {
         char* buf;
         struct malloc : public Allocator {

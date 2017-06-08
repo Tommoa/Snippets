@@ -9,13 +9,13 @@ int main() {
 
     size_t base_buffer_size = 64;
     std::cout << "Allocating base buffer of size: " << base_buffer_size << " bytes" << std::endl;
-    buffer base(base_buffer_size, buffer::default_allocator);
+    buffer base(base_buffer_size, &buffer::default_allocator);
     std::cout << "\tSuccess" << std::endl;
     std::cout << std::endl;
 
     size_t buffer_size = 8;
     std::cout << "Creating buffer with custom allocator of size: " << buffer_size << " bytes" << std::endl;
-    buffer buf(buffer_size, buffer::recursive_allocator, &base);
+    buffer buf(buffer_size, &buffer::recursive_allocator, &base);
     std::cout << "\tSuccess" << std::endl; 
     std::cout << std::endl;
 
