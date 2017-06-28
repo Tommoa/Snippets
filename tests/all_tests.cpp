@@ -1,11 +1,49 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <cstdio>
 
 #include "../rptr/rptr.hpp"
 #include "../buffer/buffer.hpp"
+#include "../buffer/buffer_complex.hpp"
 
 using namespace Snippets;
+
+void buffer_complex_test() { 
+	std::cout << std::endl << "Start of complex buffer test" << std::endl;
+	std::cout << std::endl;
+	std::cout << "size of buffer: " << sizeof(buffer_complex) << std::endl << std::endl;
+	Snippets::buffer_complex complex_buffer = Snippets::buffer_complex(); // Will use malloc, has no special traits.
+	std::cout << "Assigned new complex buffer with malloc" << std::endl;
+	int* test_int_1 = (int*)complex_buffer.allocate(sizeof(int));
+	long* test_long_1 = (long*)complex_buffer.allocate(sizeof(long));
+	std::cout << "Allocated a new int and a new long on the buffer" << std::endl;
+	*test_int_1 = rand();
+	*test_long_1 = rand();
+	std::cout << "\ttest_int_1: " << *test_int_1 << std::endl;
+	std::cout << "\ttestlong_1: " << *test_long_1 << std::endl;
+	std::cout << std::endl;
+
+	std::ofstream out("buffer_complex_test");
+	complex_buffer.save(out);
+	out.close();
+
+	std::cout << "Saved buffer to file" << std::endl;
+
+	std::ifstream in("buffer_complex_test");
+	buffer_complex cb = buffer_complex();
+	cb.load(in);
+	in.close();
+
+	std::cout << "Read buffer to new buffer 'cb'" << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Attempting to read back the int and the long" << std::endl;
+	test_int_1 = (int*)cb.offset(0);
+	test_long_1 = (long*)cb.offset(4);
+	std::cout << *test_int_1 << std::endl
+		<< *test_long_1 << std::endl;
+}
 
 void rptr_test() {
     typedef struct pen {
@@ -96,13 +134,13 @@ void rptr_test() {
 void buffer_custom_allocators() {
     std::cout << std::endl;
 
-    size_t base_buffer_size = 64;
+    std::size_t base_buffer_size = 64;
     std::cout << "Allocating base buffer of size: " << base_buffer_size << " bytes" << std::endl;
     buffer base(base_buffer_size, &buffer::default_allocator);
     std::cout << "\tSuccess" << std::endl;
     std::cout << std::endl;
 
-    size_t buffer_size = 8;
+    std::size_t buffer_size = 8;
     std::cout << "Creating buffer with custom allocator of size: " << buffer_size << " bytes" << std::endl;
     buffer buf(buffer_size, &buffer::recursive_allocator, &base);
     std::cout << "\tSuccess" << std::endl; 
@@ -146,12 +184,16 @@ void buffer_test () {
     std::cout << std::endl;
 
     std::cout << "Writing buffer to file 'test'" << std::endl;
-    buf.save(testfilename);
+	std::ofstream otestfile(testfilename, std::ofstream::binary);
+    buf.save(otestfile);
+	otestfile.close();
     std::cout << "\tSuccess" << std::endl;
     std::cout << std::endl;
 
     std::cout << "Creating new_buffer from file 'test'" << std::endl;
-    buffer new_buffer(testfilename);
+	std::ifstream itestfile(testfilename, std::ifstream::binary);
+    buffer new_buffer(itestfile);
+	itestfile.close();
     std::cout << "\tSuccess" << std::endl;
     std::cout << std::endl;
 
@@ -207,10 +249,14 @@ void rptr_buffer_test() {
     std::cout << std::endl;
 
     try {
-        longbuffer.save(longfilename);
+        std::ofstream olongbuffer(longfilename, std::ofstream::binary);
+        longbuffer.save(olongbuffer);
+        olongbuffer.close();
         std::cout << "Saved longs to file successfully" << std::endl;
         
-        rptrbuffer.save(rptrfilename);
+        std::ofstream orptrbuffer(rptrfilename, std::ifstream::binary);
+        rptrbuffer.save(orptrbuffer);
+        orptrbuffer.close();
         std::cout << "Saved rptrs to file successfully" << std::endl;
 
         std::cout << std::endl;
@@ -222,10 +268,14 @@ void rptr_buffer_test() {
     buffer longbuffer_file;
     buffer rptrbuffer_file;
     try {
-        longbuffer_file.load(longfilename);
+        std::ifstream ilongfile(longfilename, std::ifstream::binary);
+        longbuffer_file.load(ilongfile);
+        ilongfile.close();
         std::cout << "Loaded longs from file successfully" << std::endl;
 
-        rptrbuffer_file.load(rptrfilename);
+        std::ifstream irptrfile(rptrfilename, std::ifstream::binary);
+        rptrbuffer_file.load(irptrfile);
+        irptrfile.close();
         std::cout << "Loaded rptrs from file successfully" << std::endl;
     }
     catch (std::exception ex) {
@@ -274,6 +324,7 @@ int main() {
     test_functions.push_back(std::make_pair("buffer", buffer_test));
     test_functions.push_back(std::make_pair("buffer custom allocators", buffer_custom_allocators));
     test_functions.push_back(std::make_pair("rptr+buffer", rptr_buffer_test));
+	test_functions.push_back(std::make_pair("buffer complex", buffer_complex_test));
 
     while (true) {
         int execute = 0;
