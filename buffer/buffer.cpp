@@ -16,12 +16,13 @@ Snippets::buffer::buffer(size_t size, Allocator *allocator, void* allocateObject
     current_size = 0;
     max_size = size;
 }
-Snippets::buffer::buffer(char* filename, Allocator *allocator, void* allocateObject) {
-    std::ifstream in(filename,std::ifstream::ate | std::ifstream::binary);
+Snippets::buffer::buffer(std::istream& in, Allocator *allocator, void* allocateObject) {
     long size = in.tellg();
+	in.seekg(0, std::istream::end);
+	size = in.tellg() - size;
     this->allocator = allocator;
     buf = (char*)this->allocator->allocate(size, allocateObject);
-    in.seekg(0, std::ifstream::beg);
+    in.seekg(0, std::istream::beg);
     in.read(buf,size);
     max_size = size;
 }
@@ -45,14 +46,13 @@ void Snippets::buffer::clear() {
     current_size = 0;
 }
 
-void Snippets::buffer::save(char* filename) {
-    std::ofstream out(filename, std::ostream::binary);
+void Snippets::buffer::save(std::ostream& out) {
     out.write(buf, max_size);
-    out.close();
 }
-int Snippets::buffer::load(char* filename, size_t offset) {
-    std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
-    unsigned long size = in.tellg();
+int Snippets::buffer::load(std::istream& in, size_t offset) {
+	std::ios::streampos start = in.tellg();
+	in.seekg(0, std::ifstream::end);
+	std::size_t size = in.tellg() - start;
     in.seekg(0, std::ifstream::beg);
 
     if (max_size-offset < size) {
@@ -61,7 +61,6 @@ int Snippets::buffer::load(char* filename, size_t offset) {
     }
 
     in.read(buf + offset,size);
-    in.close();
     current_size = size+offset;
     if (size < max_size)
         return 1;

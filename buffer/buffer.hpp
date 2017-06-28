@@ -3,6 +3,7 @@
 
 #include "../abstractions/global.hpp"
 #include "../abstractions/allocators.hpp"
+#include <ios>
 
 namespace Snippets {
     
@@ -22,15 +23,15 @@ namespace Snippets {
         };
       protected: 
         Allocator* allocator;
-        size_t current_size;
         size_t max_size;
+		size_t current_size;
 
       public:
         static malloc default_allocator;
         static recursive recursive_allocator;
         buffer(Allocator *allocator = &default_allocator, void* allocateObject = nullptr) ;
         buffer(size_t size, Allocator *allocator = &default_allocator, void* allocateObject = nullptr);
-        buffer(char* filename, Allocator *allocator = &default_allocator, void* allocateObject = nullptr);
+        buffer(std::istream& in, Allocator *allocator = &default_allocator, void* allocateObject = nullptr);
 
         void* alloc(size_t size) ;
         template<typename T> void* alloc() {
@@ -45,8 +46,8 @@ namespace Snippets {
 
         void clear() ;
 
-        void save(char* filename) ;
-        int load(char* filename, size_t offset = 0) ;
+        void save(std::ostream& out) ;
+        int load(std::istream& in, size_t offset = 0) ;
     };
 }
 #endif
