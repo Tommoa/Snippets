@@ -1,7 +1,7 @@
 COMPILER = g++
 OBJS = all_tests.o buffer.o buffer_complex.o
 BUILD_HEADERS = rptr/rptr.hpp
-OUTPUT_NAME = test
+OUTPUT_NAME = test.bin
 COMPILER_FLAGS = -fpermissive -Wall -std=c++14 -c
 
 build: $(OBJS) $(BUILD_HEADERS)
