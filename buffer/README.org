@@ -1,14 +1,41 @@
+This folder contains two different classes which are designed for the same purpose with different foci.
+
 * buffer
 Buffer is a class designed to hold a number of bytes and allow pointers to point to them, which saves some time due to less malloc.
 ** Usage
 *** Constructors
- 1. ~buffer()~ - Allocates an empty buffer. Any allocations to the buffer will throw
- 2. ~buffer(size_t size)~ - Allocates a buffer of size ~size~
- 3. ~buffer(char* filename)~ - Creates a buffer from a file ~filename~
+ 1. ~buffer(Allocator* allocator = &default_allocator, void* AllocateObject = nullptr)~ - Allocates an empty buffer. Any allocations to the buffer will throw
+ 2. ~buffer(size_t size, Allocator* allocator = &default_allocator, void* AllocateObject = nullptr)~ - Allocates a buffer of size ~size~
+ 3. ~buffer(std::istream& in, Allocator* allocator = &default_allocator, void* AllocateObject = nullptr)~ - Creates a buffer from a stream ~in~
 *** Methods
  1. ~void* alloc(size_t size)~ - Allocates ~size~ bytes on the buffer
  2. ~void* alloc<typename T>()~ = Allocates ~sizeof(T)~ bytes on the buffer
  3. ~void* offset(size_t offset)~ - Returns the address ~offset~ bytes into the buffer
  4. ~void clear()~ - Clear the buffer
- 5. ~void save(char* filename)~ - Writes the buffer to a file ~filename~
- 6. ~int load(char* filename, size_t offset = 0)~ - Reads data into the buffer from file ~filename~ at buffer offset ~offset~
+ 5. ~void save(std::ostream& out)~ - Writes the buffer to a stream ~out~
+ 6. ~int load(std::istream& in, size_t offset = 0)~ - Reads data into the buffer from stream ~in~ at buffer offset ~offset~
+*** Exposed variables
+ 1. ~default_allocator~ - An Allocator wrapper for ~malloc~, ~realloc~ and ~free~
+ 2. ~recursive_allocator~ - An Allocator wrapper for ~buffer::alloc~
+
+ * buffer_complex
+ The buffer_complex class is designed with the same principles of the buffer class, albiet with the ability to provide more safetly in attempted references. It also allows for reallocation a lot more easily than buffer and provides a method ~free()~ which allows a value to be cleared from the buffer.
+ 
+ One additional helpful feature is that it provides the ability to pack your memory much more densely by keeping track of where objects are. This means that if you have a single buffer for a large program that provides access to several important variables, you can save on space while maintaining safety.
+
+ Drawbacks are:
+ 1. Slower than the original buffer class (mostly due to object tracking)
+ 2. Much larger than the original buffer class (72 bytes for the base class compared to 32 bytes)
+
+** Usage
+*** Constructors
+ 1. ~buffer_complex(Allocator* allocator = &default_allocator, void* AllocateObject = nullptr)~ - Allocates and empty buffer. Any allocations will add space to the buffer.
+ 2. ~buffer_complex(size_t size, Allocator* allocator = &default_allocator, void* AllocateObject = nullptr)~ - Allocates a buffer of size ~size~
+*** Methods
+ 1. ~void* allocate(size_t size)~ - Allocates space of size ~size~ on the buffer and returns a pointer to it.
+ 2. ~void* reallocate(void* current, size_t size)~ - Takes an address already existing on the buffer (given by ~current~) and reallocates it to be of size ~size~
+ 3. ~void free(void* current)~ - Takes an address already existing on the buffer (given by ~current~) and frees it from memory
+ 4. ~void load(std::istream& in, size_t offset = 0)~ - Load a stream ~in~ into the buffer starting at buffer offset ~offset~
+ 5. ~void save(std::ostream& out)~ - Save the current buffer into a stream ~out~
+ 6. ~void* offset(size_t offset)~ - Return the address of the object existing at buffer offset ~offset~
+ 7. ~void clear()~ - Delete the buffer from the heap and reset everything
