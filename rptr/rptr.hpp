@@ -1,6 +1,5 @@
 #ifndef _SNIPPETS_RPTR_DEF_HPP
 #define _SNIPPETS_RPTR_DEF_HPP
-#include <iostream>
 
 namespace Snippets {
 
@@ -12,6 +11,16 @@ namespace Snippets {
     *  Points to itself if it is null.
     **/
     template <typename T, typename S = int, typename A = unsigned long> struct rptr {
+		// NOTE:
+		// 	I did consider using assert() to ensure that the pointers were
+		// 	set and using the correct operations instead of throwing.
+		//
+		// 	As static_assert() does not allow me to ensure that all pointers
+		// 	are correct at compile time, I decided that using assert (which
+		// 	will crash the program) is worse than just throwing an exception.
+		// 	At the very least, if there is an exception thrown, the program
+		// 	can handle it to ensure no lost data before either continuing or
+		// 	exiting.
       private:
         S to;
       public:
