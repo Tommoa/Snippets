@@ -5,13 +5,13 @@
 Snippets::buffer_complex::buffer_complex(Allocator* allocator, void* AllocateObject) {
 	max_size = 0;
 	this->allocator = allocator;
-	buf = (char*)this->allocator->allocate(0, AllocateObject);
+	buf = static_cast<char*>(this->allocator->allocate(0, AllocateObject));
 }
 
 Snippets::buffer_complex::buffer_complex(size_t initial_size, Allocator* allocator, void* AllocateObject) {
 	max_size = initial_size;
 	this->allocator = allocator;
-	buf = (char*)this->allocator->allocate(initial_size, AllocateObject);
+	buf = static_cast<char*>(this->allocator->allocate(initial_size, AllocateObject));
 }
 
 void* Snippets::buffer_complex::allocate(size_t size) {
@@ -33,7 +33,7 @@ void* Snippets::buffer_complex::allocate(size_t size) {
 		}
 	}
 
-	buf = (char*) this->allocator->reallocate(buf, max_size + size); // We need to allocate some more space on the end
+	buf = static_cast<char*>(this->allocator->reallocate(buf, max_size + size)); // We need to allocate some more space on the end
 	auto pos = memory_locations.empty() ? 0 : (--memory_locations.end())->second;
 	memory_locations.emplace(std::make_pair(pos, pos+size));
 	max_size += size;
@@ -41,7 +41,7 @@ void* Snippets::buffer_complex::allocate(size_t size) {
 } 
 
 void* Snippets::buffer_complex::reallocate(void* original, size_t size) { 
-	size_t diff = (char*)original - buf;
+	size_t diff = static_cast<char*>(original) - buf;
 	auto mem = memory_locations.find(diff);
 	size_t end = (++mem) == memory_locations.end() ? max_size : (mem)->first; // Either the start of the memory location after or the end of our current memory location
 	size_t start = (--(--mem)) == memory_locations.end() ? 0 : (mem)->second; // Either the very start of the end of the previous memory location
@@ -67,7 +67,7 @@ void* Snippets::buffer_complex::reallocate(void* original, size_t size) {
 		}
 	}
 
-	buf = (char*)this->allocator->reallocate(buf, max_size + size);
+	buf = static_cast<char*>(this->allocator->reallocate(buf, max_size + size));
 	auto pos = (--memory_locations.end())->second;
 	memory_locations.emplace(std::make_pair(pos, pos + size)); 
 	memory_locations.erase(mem);
@@ -75,32 +75,32 @@ void* Snippets::buffer_complex::reallocate(void* original, size_t size) {
 } 
 
 void Snippets::buffer_complex::free(void* what) {
-	memory_locations.erase(memory_locations.find((char*)what - buf));
+	memory_locations.erase(memory_locations.find(static_cast<char*>(what) - buf));
 }
 
 void Snippets::buffer_complex::save(std::ostream& out) { 
 	size_t s = memory_locations.size();
-	out.write((char*)&s, sizeof(size_t));
+	out.write(reinterpret_cast<char*>(&s), sizeof(size_t));
 	for (auto itr = memory_locations.begin(); itr != memory_locations.end(); itr++) {
 		size_t first = itr->first, second = itr->second;
-		out.write((char*)&first, sizeof(size_t));
-		out.write((char*)&second, sizeof(size_t));
+		out.write(reinterpret_cast<char*>(&first), sizeof(size_t));
+		out.write(reinterpret_cast<char*>(&second), sizeof(size_t));
 	}
 	out.write(buf, max_size);
 }
 
 void Snippets::buffer_complex::load(std::istream& in, size_t offset) { 
 	size_t size_of_input;
-	in.read((char*)&size_of_input, sizeof(size_t));
+	in.read(reinterpret_cast<char*>(&size_of_input), sizeof(size_t));
 	size_t first, second;
 	for (size_t i = 0; i < size_of_input; ++i) {
-		in.read((char*)&first, sizeof(size_t));
-		in.read((char*)&second, sizeof(size_t));
+		in.read(reinterpret_cast<char*>(&first), sizeof(size_t));
+		in.read(reinterpret_cast<char*>(&second), sizeof(size_t));
 		memory_locations.emplace(std::make_pair(offset+first, offset+second)); 
 	}
 	size_t size = (--memory_locations.end())->second;
 	if (max_size < size) {
-		this->allocator->reallocate(buf, size);
+		buf = static_cast<char*>(this->allocator->reallocate(buf, size));
 		max_size = size;
 	}
 	in.read(buf+offset, size - offset);
@@ -118,6 +118,10 @@ void Snippets::buffer_complex::clear() {
 	max_size = 0;
 }
 
+void Snippets::buffer_complex::resize(size_t new_size) {
+	buf = static_cast<char*>(this->allocator->reallocate(buf, new_size));
+}
+
 void* Snippets::buffer_complex::malloc::allocate(size_t size, void* worker) {
 	return std::malloc(size);
 }
@@ -132,7 +136,7 @@ void Snippets::buffer_complex::malloc::free(void* what, void* worker) {
 
 void* Snippets::buffer_complex::recursive::allocate(size_t size, void* worker) {
 	if (worker != nullptr)
-		this->worker = (buffer_complex*)worker;
+		this->worker = static_cast<buffer_complex*>(worker);
 	if (this->worker == nullptr)
 		throw Snippets::AllocationError();
 	return this->worker->allocate(size);
@@ -140,7 +144,7 @@ void* Snippets::buffer_complex::recursive::allocate(size_t size, void* worker) {
 
 void* Snippets::buffer_complex::recursive::reallocate(void* what, size_t size, void* worker) {
 	if (worker != nullptr)
-		this->worker = (buffer_complex*)worker;
+		this->worker = static_cast<buffer_complex*>(worker);
 	if (this->worker == nullptr)
 		throw Snippets::AllocationError();
 	return this->worker->reallocate(what, size);
@@ -148,7 +152,7 @@ void* Snippets::buffer_complex::recursive::reallocate(void* what, size_t size, v
 
 void Snippets::buffer_complex::recursive::free(void* what, void* worker) {
 	if (worker != nullptr)
-		this->worker = (buffer_complex*)worker;
+		this->worker = static_cast<buffer_complex*>(worker);
 	if (this->worker == nullptr)
 		throw Snippets::AllocationError();
 	this->worker->free(what);

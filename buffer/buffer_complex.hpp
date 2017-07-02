@@ -44,6 +44,8 @@ namespace Snippets {
 
 		void* offset(size_t offset);
 		void clear(); 
+
+		void resize(size_t new_size);
 	};
 }
 

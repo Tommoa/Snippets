@@ -6,13 +6,13 @@
 
 Snippets::buffer::buffer(Allocator *allocator, void* allocateObject) {
     this->allocator = allocator;
-    buf = (char*)this->allocator->allocate(0, allocateObject);
+    buf = static_cast<char*>(this->allocator->allocate(0, allocateObject));
     current_size = 0;
     max_size = 0;
 }
 Snippets::buffer::buffer(size_t size, Allocator *allocator, void* allocateObject) {
     this->allocator = allocator;
-    buf = (char*)((*(this->allocator)).allocate(size, allocateObject));
+    buf = static_cast<char*>(this->allocator->allocate(size, allocateObject));
     current_size = 0;
     max_size = size;
 }
@@ -21,7 +21,7 @@ Snippets::buffer::buffer(std::istream& in, Allocator *allocator, void* allocateO
 	in.seekg(0, std::istream::end);
 	size = in.tellg() - size;
     this->allocator = allocator;
-    buf = (char*)this->allocator->allocate(size, allocateObject);
+    buf = static_cast<char*>(this->allocator->allocate(size, allocateObject));
     in.seekg(0, std::istream::beg);
     in.read(buf,size);
     max_size = size;
@@ -56,7 +56,7 @@ int Snippets::buffer::load(std::istream& in, size_t offset) {
     in.seekg(0, std::ifstream::beg);
 
     if (max_size-offset < size) {
-        buf = (char*)this->allocator->reallocate(buf, size+offset);
+        buf = static_cast<char*>(this->allocator->reallocate(buf, size+offset));
         current_size = 0;
     }
 
@@ -80,7 +80,7 @@ void Snippets::buffer::malloc::free(void* current, void* worker) {
 void* Snippets::buffer::recursive::allocate(size_t size, void *worker) {
     if (worker == nullptr)
         throw;
-    return ((Snippets::buffer*)worker)->alloc(size);
+    return static_cast<Snippets::buffer*>(worker)->alloc(size);
 }
 void* Snippets::buffer::recursive::reallocate(void *current, size_t size, void* worker) {
     throw; // No current way to do this
