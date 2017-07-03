@@ -6,33 +6,33 @@
 using namespace Snippets;
 
 int main() {
-	char *rptrfilename = "rptr_buffer_test_rptrs";
-	char *longfilename = "rptr_buffer_test_longs";
+	char* rptrfilename = "rptr_buffer_test_rptrs";
+	char* longfilename = "rptr_buffer_test_longs";
 
 	buffer longbuffer(sizeof(long) * 4);
 	buffer rptrbuffer(sizeof(int) * 4);
 
 	std::cout << std::endl;
 
-	long *t;
+	long* t;
 	std::cout << "Original values" << std::endl;
 	for (int i = 1; i <= 4; i++) {
-		t = (long *)longbuffer.alloc<long>();
+		t = (long*)longbuffer.alloc<long>();
 		*t = rand();
 	}
 	std::cout << std::endl;
 
-	rptr<long, int> *testrptr;
+	rptr<long, int>* testrptr;
 	for (int i = 0; i < 4; i++) {
-		testrptr = (rptr<long, int> *)rptrbuffer.alloc<int>();
-		testrptr->change((long *)longbuffer.offset(sizeof(long) * i),
+		testrptr = (rptr<long, int>*)rptrbuffer.alloc<int>();
+		testrptr->change((long*)longbuffer.offset(sizeof(long) * i),
 						 longbuffer.offset(0));
 	}
 
-	rptr<long, int> *looprptr;
+	rptr<long, int>* looprptr;
 	std::cout << "No realloc through memory" << std::endl;
 	for (int i = 0; i < 4; i++) {
-		looprptr = (rptr<long, int> *)rptrbuffer.offset(sizeof(int) * i);
+		looprptr = (rptr<long, int>*)rptrbuffer.offset(sizeof(int) * i);
 		std::cout << i + 1 << ": " << (*looprptr) * longbuffer.offset(0)
 				  << std::endl;
 	}
@@ -66,9 +66,9 @@ int main() {
 	std::cout << std::endl;
 
 	std::cout << "Both from files" << std::endl;
-	rptr<long, int> *ptrrptr;
+	rptr<long, int>* ptrrptr;
 	for (int i = 0; i < 4; i++) {
-		ptrrptr = (rptr<long, int> *)rptrbuffer_file.offset(sizeof(int) * i);
+		ptrrptr = (rptr<long, int>*)rptrbuffer_file.offset(sizeof(int) * i);
 		std::cout << i + 1 << ": " << (*ptrrptr) * longbuffer_file.offset(0)
 				  << std::endl;
 	}

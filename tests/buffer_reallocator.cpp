@@ -24,8 +24,8 @@ int main() {
 	std::cout << "Creating int pointers to the beginning of buffer with custom "
 				 "allocator and base buffer"
 			  << std::endl;
-	int *base_int = (int *)base.offset(0);
-	int *buf_int = (int *)buf.offset(0);
+	int* base_int = (int*)base.offset(0);
+	int* buf_int = (int*)buf.offset(0);
 	*buf_int = rand();
 	std::cout << "\tSetting custom allocator int to " << *buf_int << std::endl;
 	std::cout << std::endl;

@@ -6,9 +6,9 @@
 
 namespace Snippets {
 	struct Allocator {
-		virtual void *allocate(size_t, void *v = nullptr) = 0;
-		virtual void *reallocate(void *, size_t, void *v = nullptr) = 0;
-		virtual void free(void *, void *v = nullptr) = 0;
+		virtual void* allocate(size_t, void* v = nullptr) = 0;
+		virtual void* reallocate(void*, size_t, void* v = nullptr) = 0;
+		virtual void free(void*, void* v = nullptr) = 0;
 		~Allocator() {}
 	};
 	class AllocationError : std::exception {};

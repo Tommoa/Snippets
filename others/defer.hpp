@@ -23,9 +23,9 @@ namespace detail {
 		UncaughtExceptionCounter ec_;
 
 	  public:
-		explicit ScopeGuard(const FunctionType &fn) // reference
+		explicit ScopeGuard(const FunctionType& fn) // reference
 			: fn_(fn) {}
-		explicit ScopeGuard(FunctionType &&fn) // rvalue reference
+		explicit ScopeGuard(FunctionType&& fn) // rvalue reference
 			: fn_(std::move(fn)) {}
 		~ScopeGuard() noexcept(executeOnException) {
 			if (executeOnException == ec_.NewUncaughtException()) {
@@ -39,8 +39,8 @@ namespace detail {
 		UncaughtExceptionCounter ec_;
 
 	  public:
-		explicit ScopeGuardExit(const FunctionType &fn) : fn_(fn) {}
-		explicit ScopeGuardExit(FunctionType &&fn) : fn_(std::move(fn)) {}
+		explicit ScopeGuardExit(const FunctionType& fn) : fn_(fn) {}
+		explicit ScopeGuardExit(FunctionType&& fn) : fn_(std::move(fn)) {}
 		~ScopeGuardExit() noexcept { fn_(); }
 	};
 
@@ -50,21 +50,21 @@ namespace detail {
 
 	template <typename FunctionType>
 	ScopeGuard<typename std::decay<FunctionType>::type, true>
-		operator+(::detail::ScopeGuardOnFail, FunctionType &&fn) {
+		operator+(::detail::ScopeGuardOnFail, FunctionType&& fn) {
 		return ScopeGuard<typename std::decay<FunctionType>::type, true>(
 			std::forward<FunctionType>(fn));
 	}
 
 	template <typename FunctionType>
 	ScopeGuard<typename std::decay<FunctionType>::type, false>
-		operator+(::detail::ScopeGuardOnSuccess, FunctionType &&fn) {
+		operator+(::detail::ScopeGuardOnSuccess, FunctionType&& fn) {
 		return ScopeGuard<typename std::decay<FunctionType>::type, false>(
 			std::forward<FunctionType>(fn));
 	}
 
 	template <typename FunctionType>
 	ScopeGuardExit<typename std::decay<FunctionType>::type>
-		operator+(::detail::ScopeGuardOnExit, FunctionType &&fn) {
+		operator+(::detail::ScopeGuardOnExit, FunctionType&& fn) {
 		return ScopeGuardExit<typename std::decay<FunctionType>::type>(
 			std::forward<FunctionType>(fn));
 	}

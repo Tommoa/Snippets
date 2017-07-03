@@ -11,7 +11,7 @@ template <typename T> struct Point2D {
 		this->x = x;
 		this->y = y;
 	}
-	Point2D(Point2D<T> &old) {
+	Point2D(Point2D<T>& old) {
 		this->x = old.x;
 		this->y = old.y;
 	}
@@ -37,7 +37,7 @@ template <typename T> struct Point2D {
 };
 
 template <typename T>
-pair<T, bool> poly_winding(const vector<Point2D<T>> &poly, Point2D<T> pt) {
+pair<T, bool> poly_winding(const vector<Point2D<T>>& poly, Point2D<T> pt) {
 	int wn = 0;
 	Point2D<T> prev = poly.back() - pt;
 	for (Point2D<T> curr : poly) {
@@ -53,7 +53,7 @@ pair<T, bool> poly_winding(const vector<Point2D<T>> &poly, Point2D<T> pt) {
 	return pair<T, bool>(wn, false);
 }
 
-template <typename T> T poly_twice_area(const vector<Point2D<T>> &poly) {
+template <typename T> T poly_twice_area(const vector<Point2D<T>>& poly) {
 	coord_t twice_area = 0;
 	Point2D<T> prev = poly.back();
 	for (Point2D<T> curr : poly) {
@@ -62,14 +62,14 @@ template <typename T> T poly_twice_area(const vector<Point2D<T>> &poly) {
 	}
 	return twice_area;
 }
-template <typename T> T poly_area(const vector<Point2D<T>> &poly) {
+template <typename T> T poly_area(const vector<Point2D<T>>& poly) {
 	return poly_twice_area(poly) / 2;
 }
 
 template <typename T> vector<Point2D<T>> convex_hull(vector<Point2D<T>> pts) {
 	sort(pts.begin(), pts.end());
 	vector<Point2D<T>> upr, lwr;
-	for (Point2D<T> &pt : pts) {
+	for (Point2D<T>& pt : pts) {
 		while (upr.size() >= 2 &&
 			   (upr.back() - upr[upr.size() - 2]).cross(pt - upr.back()) >= 0)
 			upr.pop_back();

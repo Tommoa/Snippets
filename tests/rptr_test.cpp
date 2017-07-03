@@ -19,7 +19,7 @@ int main() {
 
 	typedef struct {
 		int t;
-		int *ptr;
+		int* ptr;
 	} unpacked;
 
 	int a = rand();
@@ -53,7 +53,7 @@ int main() {
 	std::cout << std::endl;
 
 	std::cout << "Relative pointer relative to start of struct" << std::endl;
-	t.ptr = rptr<int, int>(&b, (void *)&t);
+	t.ptr = rptr<int, int>(&b, (void*)&t);
 	std::cout << "\tstruct.ptr: " << t.ptr * &t << std::endl;
 	std::cout << std::endl;
 
@@ -67,8 +67,8 @@ int main() {
 	std::cout << "\tp2.t: " << p2.t << std::endl;
 	std::cout << std::endl;
 
-	p1.ptr = rptr<pen, long>(&p2, (void *)&p1);
-	p2.ptr = rptr<pen, long>(&p1, (void *)&p2);
+	p1.ptr = rptr<pen, long>(&p2, (void*)&p1);
+	p2.ptr = rptr<pen, long>(&p1, (void*)&p2);
 	std::cout << "\tp1.ptr.t: " << (p1.ptr * &p1).t << std::endl;
 	std::cout << "\tp2.ptr.t: " << (p2.ptr * &p2).t << std::endl;
 	std::cout << "\tp1.ptr.ptr.t: " << ((p1.ptr * &p1).ptr * &p2).t
@@ -82,7 +82,7 @@ int main() {
 	std::cout << "Relative pointer into a buffer of nulled chars" << std::endl;
 	char buf[8] = {0};
 	rptr<int, int> intptr;
-	intptr = rptr<int, int>((int *)&buf, (void *)&buf);
+	intptr = rptr<int, int>((int*)&buf, (void*)&buf);
 	intptr.assign(rand(), &buf);
 	std::cout << "\tAssigned " << intptr * &buf << " to the char array"
 			  << std::endl;
@@ -92,7 +92,7 @@ int main() {
 		std::cout << "\t" << i << ": " << buf[i] << std::endl;
 	}
 	std::cout << std::endl;
-	rptr<int, int> nptr((int *)&buf, (void *)&buf);
+	rptr<int, int> nptr((int*)&buf, (void*)&buf);
 	std::cout << "Pulled " << nptr * &buf << " out of the char buffer"
 			  << std::endl;
 

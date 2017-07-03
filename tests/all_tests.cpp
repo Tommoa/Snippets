@@ -17,8 +17,8 @@ void buffer_complex_test() {
 	Snippets::buffer_complex complex_buffer =
 		Snippets::buffer_complex(); // Will use malloc, has no special traits.
 	std::cout << "Assigned new complex buffer with malloc" << std::endl;
-	int *test_int_1 = (int *)complex_buffer.allocate(sizeof(int));
-	long *test_long_1 = (long *)complex_buffer.allocate(sizeof(long));
+	int* test_int_1 = (int*)complex_buffer.allocate(sizeof(int));
+	long* test_long_1 = (long*)complex_buffer.allocate(sizeof(long));
 	std::cout << "Allocated a new int and a new long on the buffer"
 			  << std::endl;
 	*test_int_1 = rand();
@@ -42,8 +42,8 @@ void buffer_complex_test() {
 	std::cout << std::endl;
 
 	std::cout << "Attempting to read back the int and the long" << std::endl;
-	test_int_1 = (int *)cb.offset(0);
-	test_long_1 = (long *)cb.offset(4);
+	test_int_1 = (int*)cb.offset(0);
+	test_long_1 = (long*)cb.offset(4);
 	std::cout << *test_int_1 << std::endl << *test_long_1 << std::endl;
 }
 
@@ -62,7 +62,7 @@ void rptr_test() {
 
 	typedef struct {
 		int t;
-		int *ptr;
+		int* ptr;
 	} unpacked;
 
 	int a = rand();
@@ -96,7 +96,7 @@ void rptr_test() {
 	std::cout << std::endl;
 
 	std::cout << "Relative pointer relative to start of struct" << std::endl;
-	t.ptr = rptr<int, int>(&b, (void *)&t);
+	t.ptr = rptr<int, int>(&b, (void*)&t);
 	std::cout << "\tstruct.ptr: " << t.ptr * &t << std::endl;
 	std::cout << std::endl;
 
@@ -110,8 +110,8 @@ void rptr_test() {
 	std::cout << "\tp2.t: " << p2.t << std::endl;
 	std::cout << std::endl;
 
-	p1.ptr = rptr<pen, long>(&p2, (void *)&p1);
-	p2.ptr = rptr<pen, long>(&p1, (void *)&p2);
+	p1.ptr = rptr<pen, long>(&p2, (void*)&p1);
+	p2.ptr = rptr<pen, long>(&p1, (void*)&p2);
 	std::cout << "\tp1.ptr.t: " << (p1.ptr * &p1).t << std::endl;
 	std::cout << "\tp2.ptr.t: " << (p2.ptr * &p2).t << std::endl;
 	std::cout << "\tp1.ptr.ptr.t: " << ((p1.ptr * &p1).ptr * &p2).t
@@ -125,7 +125,7 @@ void rptr_test() {
 	std::cout << "Relative pointer into a buffer of nulled chars" << std::endl;
 	char buf[8] = {0};
 	rptr<int, int> intptr;
-	intptr = rptr<int, int>((int *)&buf, (void *)&buf);
+	intptr = rptr<int, int>((int*)&buf, (void*)&buf);
 	intptr.assign(rand(), &buf);
 	std::cout << "\tAssigned " << intptr * &buf << " to the char array"
 			  << std::endl;
@@ -135,7 +135,7 @@ void rptr_test() {
 		std::cout << "\t" << i << ": " << buf[i] << std::endl;
 	}
 	std::cout << std::endl;
-	rptr<int, int> nptr((int *)&buf, (void *)&buf);
+	rptr<int, int> nptr((int*)&buf, (void*)&buf);
 	std::cout << "Pulled " << nptr * &buf << " out of the char buffer"
 			  << std::endl;
 
@@ -162,8 +162,8 @@ void buffer_custom_allocators() {
 	std::cout << "Creating int pointers to the beginning of buffer with custom "
 				 "allocator and base buffer"
 			  << std::endl;
-	int *base_int = (int *)base.offset(0);
-	int *buf_int = (int *)buf.offset(0);
+	int* base_int = (int*)base.offset(0);
+	int* buf_int = (int*)buf.offset(0);
 	*buf_int = rand();
 	std::cout << "\tSetting custom allocator int to " << *buf_int << std::endl;
 	std::cout << std::endl;
@@ -186,14 +186,14 @@ void buffer_test() {
 	std::cout << std::endl;
 
 	std::cout << "Allocating int my_int in buffer" << std::endl;
-	int *my_int = (int *)buf.alloc<int>();
+	int* my_int = (int*)buf.alloc<int>();
 	std::cout << "\tSuccess" << std::endl;
 	*my_int = rand();
 	std::cout << "\t*my_int: " << *my_int << std::endl;
 	std::cout << std::endl;
 
 	std::cout << "Allocating int my_second_int in buffer" << std::endl;
-	int *my_second_int = (int *)buf.alloc(sizeof(int));
+	int* my_second_int = (int*)buf.alloc(sizeof(int));
 	std::cout << "\tSuccess" << std::endl;
 	*my_second_int = rand();
 	std::cout << "\t*my_second_int: " << *my_second_int << std::endl;
@@ -216,8 +216,8 @@ void buffer_test() {
 	std::cout << "Setting my_int and my_second_int to refer to the new_buffer "
 				 "with offsets 0, 4"
 			  << std::endl;
-	my_int = (int *)new_buffer.offset(0);
-	my_second_int = (int *)new_buffer.offset(4);
+	my_int = (int*)new_buffer.offset(0);
+	my_second_int = (int*)new_buffer.offset(4);
 	std::cout << "\tmy_int: " << *my_int << std::endl;
 	std::cout << "\tmy_second_int: " << *my_second_int << std::endl;
 	std::cout << std::endl;
@@ -226,7 +226,7 @@ void buffer_test() {
 		<< "Attempting to throw allocation error by allocating a long on buffer"
 		<< std::endl;
 	try {
-		long *my_long = (long *)buf.alloc<long>();
+		long* my_long = (long*)buf.alloc<long>();
 		*my_long = 1;
 		std::cout << "\tAllocation error not caught" << std::endl;
 	} catch (AllocationError ex) {
@@ -245,25 +245,25 @@ void rptr_buffer_test() {
 
 	std::cout << std::endl;
 
-	long *t;
+	long* t;
 	std::cout << "Original values" << std::endl;
 	for (int i = 1; i <= 4; i++) {
-		t = (long *)longbuffer.alloc<long>();
+		t = (long*)longbuffer.alloc<long>();
 		*t = rand();
 	}
 	std::cout << std::endl;
 
-	rptr<long, int> *testrptr;
+	rptr<long, int>* testrptr;
 	for (int i = 0; i < 4; i++) {
-		testrptr = (rptr<long, int> *)rptrbuffer.alloc<int>();
-		testrptr->change((long *)longbuffer.offset(sizeof(long) * i),
+		testrptr = (rptr<long, int>*)rptrbuffer.alloc<int>();
+		testrptr->change((long*)longbuffer.offset(sizeof(long) * i),
 						 longbuffer.offset(0));
 	}
 
-	rptr<long, int> *looprptr;
+	rptr<long, int>* looprptr;
 	std::cout << "No realloc through memory" << std::endl;
 	for (int i = 0; i < 4; i++) {
-		looprptr = (rptr<long, int> *)rptrbuffer.offset(sizeof(int) * i);
+		looprptr = (rptr<long, int>*)rptrbuffer.offset(sizeof(int) * i);
 		std::cout << i + 1 << ": " << (*looprptr) * longbuffer.offset(0)
 				  << std::endl;
 	}
@@ -305,9 +305,9 @@ void rptr_buffer_test() {
 	std::cout << std::endl;
 
 	std::cout << "Both from files" << std::endl;
-	rptr<long, int> *ptrrptr;
+	rptr<long, int>* ptrrptr;
 	for (int i = 0; i < 4; i++) {
-		ptrrptr = (rptr<long, int> *)rptrbuffer_file.offset(sizeof(int) * i);
+		ptrrptr = (rptr<long, int>*)rptrbuffer_file.offset(sizeof(int) * i);
 		std::cout << i + 1 << ": " << (*ptrrptr) * longbuffer_file.offset(0)
 				  << std::endl;
 	}

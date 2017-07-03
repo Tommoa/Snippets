@@ -13,8 +13,8 @@ int main() {
 	Snippets::buffer_complex complex_buffer =
 		Snippets::buffer_complex(); // Will use malloc, has no special traits.
 	std::cout << "Assigned new complex buffer with malloc" << std::endl;
-	int *test_int_1 = (int *)complex_buffer.allocate(sizeof(int));
-	long *test_long_1 = (long *)complex_buffer.allocate(sizeof(long));
+	int* test_int_1 = (int*)complex_buffer.allocate(sizeof(int));
+	long* test_long_1 = (long*)complex_buffer.allocate(sizeof(long));
 	std::cout << "Allocated a new int and a new long on the buffer"
 			  << std::endl;
 	*test_int_1 = rand();
@@ -38,7 +38,7 @@ int main() {
 	std::cout << std::endl;
 
 	std::cout << "Attempting to read back the int and the long" << std::endl;
-	test_int_1 = (int *)cb.offset(0);
-	test_long_1 = (long *)cb.offset(4);
+	test_int_1 = (int*)cb.offset(0);
+	test_long_1 = (long*)cb.offset(4);
 	std::cout << *test_int_1 << std::endl << *test_long_1 << std::endl;
 }

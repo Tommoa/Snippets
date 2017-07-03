@@ -31,32 +31,32 @@ namespace Snippets {
 
 	  public:
 		rptr() { this->to = (S)0; }
-		rptr(T *to) { this->to = (S)((A)to - (A)this); }
-		rptr(T *to, void *base) { this->to = (S)((A)to - (A)base) + 1; }
-		rptr(T *to, A base) { this->to = (S)((A)to - base) + 1; }
+		rptr(T* to) { this->to = (S)((A)to - (A)this); }
+		rptr(T* to, void* base) { this->to = (S)((A)to - (A)base) + 1; }
+		rptr(T* to, A base) { this->to = (S)((A)to - base) + 1; }
 
-		void change(T *to) { this->to = (S)((A)to - (A)this); }
-		void change(T *to, void *base) { this->to = (S)((A)to - (A)base) + 1; }
-		void change(T *to, A base) { this->to = (S)((A)to - base) + 1; }
+		void change(T* to) { this->to = (S)((A)to - (A)this); }
+		void change(T* to, void* base) { this->to = (S)((A)to - (A)base) + 1; }
+		void change(T* to, A base) { this->to = (S)((A)to - base) + 1; }
 
 		void assign(T what) {
 			if (!to)
 				throw;
-			T *thing = (T *)((A)this + to);
+			T* thing = (T*)((A)this + to);
 			*thing = what;
 		}
 
-		void assign(T what, void *base) {
+		void assign(T what, void* base) {
 			if (!to)
 				throw;
-			T *thing = (T *)((A)base + to - 1);
+			T* thing = (T*)((A)base + to - 1);
 			*thing = what;
 		}
 
 		void assign(T what, A base) {
 			if (!to)
 				throw;
-			T *thing = (T *)(base + to - 1);
+			T* thing = (T*)(base + to - 1);
 			*thing = what;
 		}
 
@@ -66,22 +66,22 @@ namespace Snippets {
 			else
 				this->to = (S)(other.to + ((A)&other - (A)this));
 		}
-		void operator=(T *other) { this->to = (S)((A)other - (A)this); }
+		void operator=(T* other) { this->to = (S)((A)other - (A)this); }
 
 		T operator*() {
 			if (to & 1 || !to)
 				throw;
-			return *(T *)((A)this + to);
+			return *(T*)((A)this + to);
 		}
-		T operator*(void *base) {
+		T operator*(void* base) {
 			if (!(to & 1) || !to)
 				throw;
-			return *(T *)((A)base + to - 1);
+			return *(T*)((A)base + to - 1);
 		}
 		T operator*(A base) {
 			if (!(to & 1) || !to)
 				throw;
-			return *(T *)((base + to) - 1);
+			return *(T*)((base + to) - 1);
 		}
 	};
 }

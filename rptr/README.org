@@ -3,9 +3,9 @@
 ** Usage
 
 *** Templating
-#+BEGIN_SRC c++
+#+ BEGIN_SRC c ++
 template <typename T, typename S = int, typename A = unsigned long>
-#+END_SRC
+#+ END_SRC
  - ~T~
 Refers to the type that the rptr will be pointing to.
  - ~S~
