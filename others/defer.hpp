@@ -1,15 +1,16 @@
 #include <exception>
 
+namespace detail {
+
 #define CONCATSTRIMPL(s1, s2) s1##s2
 #define CONCATSTR(s1, s2) CONCATSTRIMPL(s1, s2)
 
-#ifdef __COUNTER__
-#define ALLOCATEOBJ(what) auto CONCATSTR(what, __COUNTER__)
-#else
-#define ALLOCATEOBJ(what) auto CONCATSTR(what, __LINE__)
-#endif
+	long counter() {
+		static long i = -1;
+		return ++i;
+	}
 
-namespace detail {
+#define ALLOCATEOBJ(what) auto CONCATSTR(what, counter())
 
 	struct UncaughtExceptionCounter {
 		int ex_ = 0;
