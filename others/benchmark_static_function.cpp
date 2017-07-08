@@ -5,7 +5,8 @@ static void escape(void* p) { asm volatile("" : : "g"(p) : "memory"); }
 static void clobber() { asm volatile("" : : : "memory"); }
 
 // NOTE: Almost all of these functions use 4 instructions and 1 register.
-// 		If you do i++ instead of ++i, you use an additional register (and sometimes
+// 		If you do i++ instead of ++i, you use an additional register (and
+// sometimes
 // 		instruction) to store and return the result
 
 // Clang: 	4 instructions, 1 register

@@ -32,7 +32,7 @@ namespace detail {
 			: fn_(fn) {}
 		explicit ScopeGuard(FunctionType&& fn) // rvalue reference
 			: fn_(std::move(fn)) {}
-		~ScopeGuard() noexcept(executeOnException) { 
+		~ScopeGuard() noexcept(executeOnException) {
 			if (executeOnException == ec_.NewUncaughtException()) {
 				fn_();
 			}
