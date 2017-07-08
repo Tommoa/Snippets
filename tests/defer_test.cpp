@@ -31,6 +31,7 @@ void test_with_obj(bool throwing) {
 int main() {
 	int *i = new int[100];
 	defer {
+		std::cout << "Deleting i" << std::endl;
 		delete[] i;
 	};
 
