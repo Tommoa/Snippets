@@ -10,7 +10,11 @@ namespace detail {
 		return ++i;
 	}
 
-#define ALLOCATEOBJ(what) auto CONCATSTR(what, counter())
+#ifdef __COUNTER__
+#define ALLOCATEOBJ(what) auto CONCATSTR(what, __COUNTER__)
+#else
+#define ALLOCATEOBJ(what) auto CONCATSTR(what, __LINE__)
+#endif
 
 	struct UncaughtExceptionCounter {
 		int ex_ = 0;
@@ -28,7 +32,7 @@ namespace detail {
 			: fn_(fn) {}
 		explicit ScopeGuard(FunctionType&& fn) // rvalue reference
 			: fn_(std::move(fn)) {}
-		~ScopeGuard() noexcept(executeOnException) {
+		~ScopeGuard() noexcept(executeOnException) { 
 			if (executeOnException == ec_.NewUncaughtException()) {
 				fn_();
 			}
