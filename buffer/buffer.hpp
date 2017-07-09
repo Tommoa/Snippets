@@ -51,6 +51,7 @@ namespace Snippets {
 		void* offset(size_t offset);
 
 		void clear();
+		void resize(size_t new_size, bool allow_try = true);
 
 		void save(std::ostream& out);
 		int load(std::istream& in, size_t offset = 0);

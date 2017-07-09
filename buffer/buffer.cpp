@@ -1,8 +1,9 @@
+#include "buffer.hpp"
+
 #include <cstdlib>
+#include <cstring>
 #include <fstream>
 #include <iostream>
-
-#include "buffer.hpp"
 
 Snippets::buffer::buffer(Allocator* allocator, void* allocateObject) {
 	this->allocator = allocator;
@@ -69,6 +70,24 @@ int Snippets::buffer::load(std::istream& in, size_t offset) {
 	if (size < max_size)
 		return 1;
 	return 0;
+}
+
+void Snippets::buffer::resize(size_t new_size, bool allow_try) {
+	if (allow_try) {
+		try {
+			buf =
+				static_cast<char*>(this->allocator->reallocate(buf, new_size));
+		} catch (...) { // We want to make sure that we catch all possible
+						// reallocator errors
+			char* temp = buf;
+			buf = static_cast<char*>(this->allocator->allocate(new_size));
+			std::memcpy(buf, temp, max_size);
+			this->allocator->free(buf);
+		}
+	} else {
+		buf = static_cast<char*>(this->allocator->reallocate(buf, new_size));
+	}
+	max_size = new_size;
 }
 
 void* Snippets::buffer::malloc::allocate(size_t size, void* worker) {
