@@ -2,20 +2,6 @@
 
 namespace detail {
 
-#define CONCATSTRIMPL(s1, s2) s1##s2
-#define CONCATSTR(s1, s2) CONCATSTRIMPL(s1, s2)
-
-	long counter() {
-		static long i = -1;
-		return ++i;
-	}
-
-#ifdef __COUNTER__
-#define ALLOCATEOBJ(what) auto CONCATSTR(what, __COUNTER__)
-#else
-#define ALLOCATEOBJ(what) auto CONCATSTR(what, __LINE__)
-#endif
-
 	struct UncaughtExceptionCounter {
 		int ex_ = 0;
 		UncaughtExceptionCounter() : ex_(std::uncaught_exceptions()) {}
@@ -39,19 +25,8 @@ namespace detail {
 		}
 	};
 
-	template <typename FunctionType> class ScopeGuardExit { // For all exits.
-		FunctionType fn_;
-		UncaughtExceptionCounter ec_;
-
-	  public:
-		explicit ScopeGuardExit(const FunctionType& fn) : fn_(fn) {}
-		explicit ScopeGuardExit(FunctionType&& fn) : fn_(std::move(fn)) {}
-		~ScopeGuardExit() noexcept { fn_(); }
-	};
-
 	enum class ScopeGuardOnFail {};
 	enum class ScopeGuardOnSuccess {};
-	enum class ScopeGuardOnExit {};
 
 	template <typename FunctionType>
 	ScopeGuard<typename std::decay<FunctionType>::type, true>
@@ -67,17 +42,8 @@ namespace detail {
 			std::forward<FunctionType>(fn));
 	}
 
-	template <typename FunctionType>
-	ScopeGuardExit<typename std::decay<FunctionType>::type>
-		operator+(::detail::ScopeGuardOnExit, FunctionType&& fn) {
-		return ScopeGuardExit<typename std::decay<FunctionType>::type>(
-			std::forward<FunctionType>(fn));
-	}
-}
-
 #define defer_fail                                                             \
 	ALLOCATEOBJ(defer_fail_) = ::detail::ScopeGuardOnFail() + [&]() noexcept
 #define defer_success                                                          \
 	ALLOCATEOBJ(defer_success_) = ::detail::ScopeGuardOnSuccess() + [&]()
-#define defer                                                                  \
-	ALLOCATEOBJ(defer_) = ::detail::ScopeGuardOnExit() + [&]() noexcept
+}
