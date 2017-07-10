@@ -1,3 +1,6 @@
+#ifndef __SNIPPETS_DEFER_EXCEPTIONS_HPP__
+#define __SNIPPETS_DEFER_EXCEPTIONS_HPP__
+#include "defer.hpp"
 #include <exception>
 
 namespace detail {
@@ -47,3 +50,4 @@ namespace detail {
 #define defer_success                                                          \
 	ALLOCATEOBJ(defer_success_) = ::detail::ScopeGuardOnSuccess() + [&]()
 }
+#endif
