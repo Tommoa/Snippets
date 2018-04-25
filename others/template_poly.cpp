@@ -31,7 +31,9 @@ int main() {
     Incr i;
     print_array(array);
 
-    print_array(map(array, std::bind(&Function::incr, &i, std::placeholders::_1)));
+    print_array(map(array, std::bind(&Incr::incr, &i, std::placeholders::_1)));
+
+    print_array(map(array, [](long x) { return x+1; }));
 
     print_array(poly_map(array, poly_incr));
 
